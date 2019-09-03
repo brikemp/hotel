@@ -1,8 +1,20 @@
 # coordinates management of hotel
 
-
-
-
-
-
-# is room available method, look at given dates and see if room is available for those dates
+class Hotel
+  attr_reader :rooms, :reservations
+  
+  def initialize(reservations: nil) 
+    @rooms = [*1..20]
+    @reservations = reservations || []
+  end
+  
+  def res_by_date(date)
+    @resevations.find { |reservtion| start_date == date} # or end_date == date
+  end
+  
+  def cost_of_res(res_id)
+    
+    # is room available method, look at given dates and see if room is available for those dates
+  end
+  
+end
