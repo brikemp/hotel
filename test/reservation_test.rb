@@ -20,5 +20,25 @@ describe "Reservation class" do
       expect(@reservation.start_date).must_be_kind_of Date
       expect(@reservation.end_date).must_be_kind_of Date
     end
+    
+    it "calculates resevation cost correctly for non-block booking" do
+      expect(@reservation.cost).must_equal 800
+    end
+    
   end
+  
+  describe "Validates reservations dates" do
+    it "does not allow end date before start date" do
+      expect { Reservation.new(room: 5, user_id: 34, start_date:"5/09/2019", end_date:"5/08/2019") }.must_raise ArgumentError
+    end
+    
+    it "does not allow end date and start date to be the same" do
+      expect { Reservation.new(room: 5, user_id: 34, start_date:"5/08/2019", end_date:"5/08/2019") }.must_raise ArgumentError
+    end
+    
+    it"does not allow invalid dates" do
+      expect { Reservation.new(room: 5, user_id: 34, start_date:"14/08/2019", end_date:"5/08/2019") }.must_raise ArgumentError
+    end
+  end
+  
 end

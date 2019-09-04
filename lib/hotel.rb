@@ -12,9 +12,7 @@ class Hotel
     @resevations.find { |reservtion| start_date == date} # or end_date == date
   end
   
-  def cost_of_res(res_id)
-    
-    # is room available method, look at given dates and see if room is available for those dates
-  end
+  
+  # is room available method, look at given dates and see if room is available for those dates
   
 end

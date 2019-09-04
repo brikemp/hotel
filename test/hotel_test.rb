@@ -18,5 +18,9 @@ describe "Hotel class" do
       expect(@hotel.rooms).must_be_kind_of Array
       expect(@hotel.reservations).must_be_kind_of Array
     end
+    
+    it "has the correct number of rooms" do
+      expect(@hotel.rooms).must_be_kind_of Array
+    end
   end
 end
