@@ -1,10 +1,9 @@
 # coordinates management of hotel
 
 class Hotel
-  attr_reader :rooms, :reservations
+  attr_reader :reservations
   
   def initialize(reservations: nil) 
-    @rooms = [*1..20]
     @reservations = reservations || []
   end
   
