@@ -2,14 +2,14 @@ require 'date'
 require_relative 'hotel'
 
 class Reservation
-  attr_reader :room, :user_id, :start_date, :end_date, :block, :reservation_id, :cost
+  attr_reader :room, :start_date, :end_date, :block, :reservation_id, :cost
   ROOM_COST = 200
   # @@rooms = [*1..20]
   
-  def initialize(start_date:, end_date:, block:false)
+  def initialize(start_date:, end_date:, room:, block:false)
     @start_date = Date.strptime(start_date, "%m/%d/%Y")
     @end_date = Date.strptime(end_date, "%m/%d/%Y")   
-    @room = Hotel.list_available_rooms(@start_date, @end_date).sample 
+    @room = room
     @block = block
     @reservation_id = [1,2,3,4,5].sample # add random id or sequential 
     @cost = ROOM_COST * (@end_date - @start_date).to_i # unless it's a block, then discount

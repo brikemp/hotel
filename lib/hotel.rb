@@ -8,9 +8,9 @@ class Hotel
     @rooms = [*1..20]
   end
   
-  # def self.make_reservation(start_date:, end_date:, block:false)
   def make_reservation(start_date:, end_date:, block:false)
-    reservation = Reservation.new(start_date:start_date, end_date:end_date, block:block)
+    room = list_available_rooms(start_date, end_date).sample
+    reservation = Reservation.new(start_date:start_date, end_date:end_date, room:room, block:block)
     reservations.push(reservation)
     return reservation
   end
@@ -19,27 +19,23 @@ class Hotel
     puts Hotel.list_available_rooms(start_date, end_date)
   end
   
-  def self.list_available_rooms(start_date, end_date)
+  def get_reservations
+    return @reservations
+  end
+  
+  def list_available_rooms(start_date, end_date)
     if start_date.class == String
       start_date = Date.strptime(start_date, "%m/%d/%Y")
     end
     if end_date.class == String
       end_date = Date.strptime(end_date, "%m/%d/%Y") 
     end
-    # if @reservations.length > 1
-    #   reservations = @reservations.map do |reservation|
-    #     reservation
-    #   end
-    # end
     occupied_rooms = []
-    # if @reservations.length > 0
-    puts @reservations != nil
-    if @reservations != nil
-      @reservations.each do |reservation|
-        puts reservation
+    reservations = get_reservations
+    if reservations != nil
+      reservations.each do |reservation|
         date = start_date.dup
         until date == end_date do
-          puts if (start_date >= reservation.start_date && start_date < reservation.end_date) || (end_date > reservation.start_date && end_date <= reservation.end_date)
           if (start_date >= reservation.start_date && start_date < reservation.end_date) || (end_date > reservation.start_date && end_date <= reservation.end_date)
             occupied_rooms.push(reservation.room)
             break
@@ -49,15 +45,9 @@ class Hotel
       end
     end
     rooms = [*1..20]
-    puts "rooms: "
-    p rooms
-    puts "occupied: "
-    p occupied_rooms
     occupied_rooms.each do |room|
       rooms.delete(room)
     end
-    puts "rooms: "
-    p rooms
     if rooms == nil
       raise ArgumentError.new("Sorry! We are currently all booked for those days, pleae try again.") 
     end
