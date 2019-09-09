@@ -4,7 +4,7 @@ describe "Reservation class" do
   
   describe "Reservation instantiation" do
     before do
-      @reservation = Reservation.new(room: 5, user_id: 34, start_date:"5/05/2019", end_date:"5/09/2019")
+      @reservation = Reservation.new(start_date:"5/05/2019", end_date:"5/09/2019")
     end
     
     it "is an instance of Reservation" do
@@ -12,7 +12,7 @@ describe "Reservation class" do
     end
     
     it "is set up for specific attributes and data types" do
-      [:room, :user_id, :start_date, :end_date].each do |prop|
+      [:user_id, :start_date, :end_date].each do |prop|
         expect(@reservation).must_respond_to prop
       end
       expect(@reservation.room).must_be_kind_of Integer
@@ -21,7 +21,7 @@ describe "Reservation class" do
       expect(@reservation.end_date).must_be_kind_of Date
     end
     
-    it "calculates resevation cost correctly for non-block booking" do
+    it "calculates reservation cost correctly for non-block booking" do
       expect(@reservation.cost).must_equal 800
     end
     
@@ -29,15 +29,15 @@ describe "Reservation class" do
   
   describe "Validates reservations dates" do
     it "does not allow end date before start date" do
-      expect { Reservation.new(room: 5, user_id: 34, start_date:"5/09/2019", end_date:"5/08/2019") }.must_raise ArgumentError
+      expect { Reservation.new(start_date:"5/09/2019", end_date:"5/08/2019") }.must_raise ArgumentError
     end
     
     it "does not allow end date and start date to be the same" do
-      expect { Reservation.new(room: 5, user_id: 34, start_date:"5/08/2019", end_date:"5/08/2019") }.must_raise ArgumentError
+      expect { Reservation.new(start_date:"5/08/2019", end_date:"5/08/2019") }.must_raise ArgumentError
     end
     
     it"does not allow invalid dates" do
-      expect { Reservation.new(room: 5, user_id: 34, start_date:"14/08/2019", end_date:"5/08/2019") }.must_raise ArgumentError
+      expect { Reservation.new(start_date:"14/08/2019", end_date:"5/08/2019") }.must_raise ArgumentError
     end
   end
   
