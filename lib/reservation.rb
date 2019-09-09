@@ -4,7 +4,6 @@ require_relative 'hotel'
 class Reservation
   attr_reader :room, :start_date, :end_date, :block, :reservation_id, :cost
   ROOM_COST = 200
-  # @@rooms = [*1..20]
   
   def initialize(start_date:, end_date:, room:, block:false)
     @start_date = Date.strptime(start_date, "%m/%d/%Y")
@@ -17,12 +16,6 @@ class Reservation
     if start_date == nil || end_date == nil || end_date <= start_date
       raise ArgumentError.new("Please enter a valid date range")
     end
-    
   end
-  
-  def self.all
-    @@all
-  end
-  
   
 end
