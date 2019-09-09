@@ -1,5 +1,4 @@
 require 'date'
-require_relative 'hotel'
 
 class Reservation
   attr_reader :room, :start_date, :end_date, :block, :reservation_id, :cost

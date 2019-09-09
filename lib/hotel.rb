@@ -1,4 +1,5 @@
 require_relative 'reservation'
+require_relative 'block'
 
 class Hotel
   attr_reader :reservations, :rooms
@@ -8,7 +9,7 @@ class Hotel
     @rooms = [*1..20]
   end
   
-  def make_reservation(start_date:, end_date:, block:false)
+  def make_reservation(start_date:, end_date:, block:false, reservation_id:)
     id = @reservations.length + 1
     room = list_available_rooms(start_date, end_date).sample
     reservation = Reservation.new(start_date:start_date, end_date:end_date, room:room, block:block, reservation_id:id)
