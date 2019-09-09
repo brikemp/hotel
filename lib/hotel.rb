@@ -9,8 +9,9 @@ class Hotel
   end
   
   def make_reservation(start_date:, end_date:, block:false)
+    id = @reservations.length + 1
     room = list_available_rooms(start_date, end_date).sample
-    reservation = Reservation.new(start_date:start_date, end_date:end_date, room:room, block:block)
+    reservation = Reservation.new(start_date:start_date, end_date:end_date, room:room, block:block, reservation_id:id)
     reservations.push(reservation)
     return reservation
   end

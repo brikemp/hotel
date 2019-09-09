@@ -24,7 +24,7 @@ describe "Hotel class" do
   describe "Makes reservations correctly and finds appropriate rooms" do
     it "removes booked room from eligible room list" do
       hotel = Hotel.new 
-      @reservation = hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      @reservation = hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:1)
       room = @reservation.room
       available_rooms = hotel.list_available_rooms("5/05/2019", "5/09/2019")
       
@@ -34,13 +34,13 @@ describe "Hotel class" do
     it "raises argument error when there are no rooms available" do
       hotel = Hotel.new
       expect { 21.times do
-        hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+        hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:1)
       end }.must_raise ArgumentError
     end
     
     it "instantiates Reservation" do
       hotel = Hotel.new
-      @reservation = hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      @reservation = hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:1)
       
       expect(@reservation).must_be_kind_of Reservation
     end
@@ -49,9 +49,9 @@ describe "Hotel class" do
   describe "Find reservation by date" do
     it "lists all reservation for a date range" do
       hotel = Hotel.new 
-      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
-      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
-      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:1)
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:2)
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:3)
       found_reservations = hotel.find_reservations_by_date("5/05/2019","5/09/2019")
       
       expect(found_reservations.length).must_equal 3
@@ -59,10 +59,10 @@ describe "Hotel class" do
     
     it "does not list reservations outside of date range" do
       hotel = Hotel.new 
-      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
-      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
-      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
-      hotel.make_reservation(start_date:"5/09/2019", end_date:"5/10/2019")
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:1)
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:2)
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:3)
+      hotel.make_reservation(start_date:"5/09/2019", end_date:"5/10/2019", reservation_id:4)
       found_reservations = hotel.find_reservations_by_date("5/05/2019","5/09/2019")
       
       expect(found_reservations.length).must_equal 3

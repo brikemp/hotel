@@ -4,7 +4,7 @@ describe "Reservation class" do
   
   describe "Reservation instantiation" do
     before do
-      @reservation = Reservation.new(start_date:"5/05/2019", end_date:"5/09/2019", room:5)
+      @reservation = Reservation.new(start_date:"5/05/2019", end_date:"5/09/2019", room:5, reservation_id:1)
     end
     
     it "is an instance of Reservation" do
