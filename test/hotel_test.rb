@@ -11,36 +11,62 @@ describe "Hotel class" do
       expect(@hotel).must_be_kind_of Hotel
     end
     
-    it "is set up for specific attributes and data types" do
+    it "has correct attributes" do
       [:rooms, :reservations].each do |prop|
         expect(@hotel).must_respond_to prop
       end
       expect(@hotel.rooms).must_be_kind_of Array
+      expect(@hotel.rooms.length).must_equal 20
       expect(@hotel.reservations).must_be_kind_of Array
-    end
-    
-    # Rooms belongs in hotel
-    it "has the correct number of rooms" do
-      expect(@hotel.rooms).must_be_kind_of Array
     end
   end
   
-  describe "Assigns rooms correctly" do
+  describe "Makes reservations correctly and finds appropriate rooms" do
     it "removes booked room from eligible room list" do
-      @reservation = Hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      hotel = Hotel.new 
+      @reservation = hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
       room = @reservation.room
-      available_rooms = Hotel.list_available_rooms("5/05/2019", "5/09/2019")
+      available_rooms = hotel.list_available_rooms("5/05/2019", "5/09/2019")
       
       expect(available_rooms.include?(room)).must_equal false
     end
     
     it "raises argument error when there are no rooms available" do
-      
+      hotel = Hotel.new
       expect { 21.times do
-        Hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+        hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
       end }.must_raise ArgumentError
     end
     
+    it "instantiates Reservation" do
+      hotel = Hotel.new
+      @reservation = hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      
+      expect(@reservation).must_be_kind_of Reservation
+    end
+  end
+  
+  describe "Find reservation by date" do
+    it "lists all reservation for a date range" do
+      hotel = Hotel.new 
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      found_reservations = hotel.find_reservations_by_date("5/05/2019","5/09/2019")
+      
+      expect(found_reservations.length).must_equal 3
+    end
+    
+    it "does not list reservations outside of date range" do
+      hotel = Hotel.new 
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      hotel.make_reservation(start_date:"5/09/2019", end_date:"5/10/2019")
+      found_reservations = hotel.find_reservations_by_date("5/05/2019","5/09/2019")
+      
+      expect(found_reservations.length).must_equal 3
+    end
   end
 end
 

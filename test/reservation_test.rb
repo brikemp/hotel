@@ -36,8 +36,12 @@ describe "Reservation class" do
       expect { Reservation.new(start_date:"5/08/2019", end_date:"5/08/2019") }.must_raise ArgumentError
     end
     
-    it"does not allow invalid dates" do
+    it "does not allow invalid dates" do
       expect { Reservation.new(start_date:"14/08/2019", end_date:"5/08/2019") }.must_raise ArgumentError
     end
+    
+    it "confirms reservation is at least one day" do
+      expect { Reservation.new(start_date:"5/08/2019", end_date:"5/08/2019") }.must_raise ArgumentError
+    end
   end
-end
+end 

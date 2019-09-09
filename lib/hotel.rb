@@ -15,12 +15,27 @@ class Hotel
     return reservation
   end
   
-  def list_rooms(start_date, end_date)
-    puts Hotel.list_available_rooms(start_date, end_date)
-  end
-  
-  def get_reservations
-    return @reservations
+  def find_reservations_by_date(start_date, end_date)
+    if start_date.class == String
+      start_date = Date.strptime(start_date, "%m/%d/%Y")
+    end
+    if end_date.class == String
+      end_date = Date.strptime(end_date, "%m/%d/%Y") 
+    end
+    found_reservations = []
+    if @reservations != nil
+      @reservations.each do |reservation|
+        date = start_date.dup
+        until date == end_date do
+          if (start_date >= reservation.start_date && start_date < reservation.end_date) || (end_date > reservation.start_date && end_date <= reservation.end_date)
+            found_reservations.push(reservation)
+            break
+          end
+          date += 1
+        end
+      end
+    end
+    return found_reservations
   end
   
   def list_available_rooms(start_date, end_date)
@@ -31,9 +46,8 @@ class Hotel
       end_date = Date.strptime(end_date, "%m/%d/%Y") 
     end
     occupied_rooms = []
-    reservations = get_reservations
-    if reservations != nil
-      reservations.each do |reservation|
+    if @reservations != nil
+      @reservations.each do |reservation|
         date = start_date.dup
         until date == end_date do
           if (start_date >= reservation.start_date && start_date < reservation.end_date) || (end_date > reservation.start_date && end_date <= reservation.end_date)
@@ -44,11 +58,11 @@ class Hotel
         end
       end
     end
-    rooms = [*1..20]
+    rooms = @rooms.dup
     occupied_rooms.each do |room|
       rooms.delete(room)
     end
-    if rooms == nil
+    if rooms.length == 0
       raise ArgumentError.new("Sorry! We are currently all booked for those days, pleae try again.") 
     end
     return rooms
