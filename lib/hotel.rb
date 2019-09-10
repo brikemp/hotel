@@ -2,20 +2,50 @@ require_relative 'reservation'
 require_relative 'block'
 
 class Hotel
-  attr_reader :reservations, :rooms
+  attr_reader :reservations, :rooms, :blocks
   
-  def initialize(reservations: nil) 
+  def initialize(reservations: nil, blocks:nil) 
     @reservations = reservations || []
+    @blocks = blocks || []
     @rooms = [*1..20]
   end
   
-  def make_reservation(start_date:, end_date:, block:false, reservation_id:)
-    id = @reservations.length + 1
-    room = list_available_rooms(start_date, end_date).sample
-    reservation = Reservation.new(start_date:start_date, end_date:end_date, room:room, block:block, reservation_id:id)
-    reservations.push(reservation)
-    return reservation
+  def book_block
+    
   end
+  
+  def make_reservation(start_date:, end_date:, hold_block:false, block_id:nil, block_reservation:nil)
+    # need if booking from block
+    if hold_block != false && hold_block.to_s.match(/[1-5]/) == nil # || ( || ) 
+      raise ArgumentError.new("If you want hold a block of rooms, enter the number of rooms to hold.")
+    elsif hold_block == false
+      id = @reservations.length + 1
+      room = list_available_rooms(start_date, end_date).sample
+      reservation = Reservation.new(start_date:start_date, end_date:end_date, room:room, reservation_id:id)
+      reservations.push(reservation)
+      return reservation
+    elsif hold_block.to_s.match(/[1-5]/) != nil
+      reservation_block = {}
+      available_count = list_available_rooms(start_date, end_date).length
+      if available_count < hold_block
+        raise ArgumentError.new("Not enough rooms available for this block")
+      end
+      hold_block.times do
+        id = @reservations.length + 1
+        room = list_available_rooms(start_date, end_date).sample
+        reservation = Reservation.new(start_date:start_date, end_date:end_date, room:room, reservation_id:id)
+        # either push all or none if all rooms available
+        reservations.push(reservation)
+        reservation_block[reservation] = "Not booked"
+      end
+      id = @blocks.length + 1
+      block = new.Block(block:reservation_block, block_id:id)
+      return block
+      # elsif block_id != nil
+      #   # resrerve a room for block
+    end
+  end
+  
   
   def find_reservations_by_date(start_date, end_date)
     if start_date.class == String
