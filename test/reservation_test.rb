@@ -29,7 +29,7 @@ describe "Reservation class" do
   
   describe "Validates reservations dates" do
     it "does not allow end date before start date" do
-      expect { Reservation.new(start_date:"5/09/2019", end_date:"5/08/2019") }.must_raise ArgumentError
+      expect { Reservation.new(start_date:"5/14/2019", end_date:"5/08/2019") }.must_raise ArgumentError
     end
     
     it "does not allow end date and start date to be the same" do

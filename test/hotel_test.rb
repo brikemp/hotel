@@ -91,10 +91,25 @@ describe "Hotel class" do
       expect { hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", hold_block:3, block_id:2) }.must_raise ArgumentError
     end
     
-    it "removes blocked room for availability once booked" do
+    it "removes blocked room from availability once booked" do
+      hotel = Hotel.new 
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", hold_block:3)
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", hold_block:4)
+      reservation = hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", block_id:1)
       
+      expect(reservation).must_equal "Booked"
       
     end
+    
+    it "does not allow room from block to be blocked if all are gone" do
+      hotel = Hotel.new 
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", hold_block:3)
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", hold_block:4)
+      
+      expect{ 4.times do hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", block_id:1) end }.must_raise ArgumentError
+        
+      end
+    end
   end
-end
-
+  
+  

@@ -36,7 +36,6 @@ class Hotel
         id = @reservations.length + 1
         room = list_available_rooms(start_date, end_date).sample
         reservation = Reservation.new(start_date:start_date, end_date:end_date, room:room, reservation_id:id)
-        # either push all or none if all rooms available
         reservations.push(reservation)
         reservation_block[reservation] = "Not booked"
       end
@@ -51,8 +50,9 @@ class Hotel
       if reservation == nil
         raise ArgumentError.new("This block has been fully booked")
       end
-      puts reservation.class# reservation.key = "Booked"
+      puts reservation.class
       reservations[reservation[0]] = "Booked"
+      return reservations[reservation[0]]
     end
   end
   

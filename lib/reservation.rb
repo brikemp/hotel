@@ -13,7 +13,7 @@ class Reservation
     @reservation_id = reservation_id
     @cost = @block == false ? ROOM_COST * (@end_date - @start_date).to_i : ROOM_COST * DISCOUNT * (@end_date - @start_date).to_i
     
-    if start_date == nil || end_date == nil || end_date <= start_date
+    if end_date <= start_date || start_date == nil || end_date == nil
       raise ArgumentError.new("Please enter a valid date range")
     end
   end
