@@ -1,0 +1,3 @@
+List of changes that I would like to make:
+	- I would like to break apart my make_reservation class in to separate methods that are called my an “overall” make_reservation class. Currently, that class contains a lot of ifs/elses that make it confusing to follow and update when needed
+	- I would like to combine my block and reservation classes into one because there is very limited differences between the two.
