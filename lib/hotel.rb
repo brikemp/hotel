@@ -12,7 +12,7 @@ class Hotel
   
   
   def make_reservation(start_date:, end_date:, hold_block:false, block_id:nil)
-    if hold_block != false && hold_block.to_s.match(/[1-5]/) == nil # || ( || ) 
+    if hold_block != false && hold_block.to_s.match(/[1-5]/) == nil
       raise ArgumentError.new("If you want hold a block of rooms, enter the number of rooms (maximum of 5) to hold.")
     elsif hold_block == false && block_id == nil
       id = @reservations.length + 1
@@ -50,7 +50,6 @@ class Hotel
       if reservation == nil
         raise ArgumentError.new("This block has been fully booked")
       end
-      puts reservation.class
       reservations[reservation[0]] = "Booked"
       return reservations[reservation[0]]
     end
@@ -77,6 +76,30 @@ class Hotel
       end
     end
     return found_reservations
+  end
+  
+  def check_block_availability(block_id:)
+    if block_id.to_s.match(/[1-5]/) != nil
+      block = @blocks.find{|block| block.block_id == block_id }
+      if block == nil
+        raise ArgumentError.new("This block does not exist yet, please reserve the block first")
+      end
+      reservations = block.reservations
+      available_in_block = reservations.select{|reservation, status| status == "Not booked"}
+      puts available_in_block
+      puts available_in_block.class
+      if available_in_block.length == 0
+        raise ArgumentError.new("This block has been fully booked, there are 0 rooms available")
+      end
+      available_reservations = []
+      available_in_block.each do |reservation, status|
+        available_reservations.push(reservation)
+      end
+      available_rooms = available_reservations.map do |reservation|
+        reservation.room
+      end
+      return available_rooms
+    end
   end
   
   def list_available_rooms(start_date, end_date)

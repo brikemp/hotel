@@ -106,17 +106,46 @@ describe "Hotel class" do
       hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", hold_block:3)
       hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", hold_block:4)
       
-      expect{ 4.times do hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", block_id:1) end }.must_raise ArgumentError
-        
-      end
+      expect{ 4.times do 
+        hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", block_id:1) 
+      end }.must_raise ArgumentError
       
-      it "does not allow blocks rooms to be booked before they are reserved" do
-        hotel = Hotel.new 
-        
-        expect{ hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", block_id:1) }.must_raise ArgumentError
-        
-      end
+    end
+    
+    it "does not allow blocks rooms to be booked before they are reserved" do
+      hotel = Hotel.new 
+      
+      expect{ hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", block_id:1) }.must_raise ArgumentError
+      
     end
   end
   
-  
+  describe "Find availability of block" do
+    it "lists all rooms available for a block" do
+      hotel = Hotel.new 
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", hold_block:4)
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", hold_block:3)
+      
+      result1 = hotel.check_block_availability(block_id:1)
+      result2 = hotel.check_block_availability(block_id:2)
+      
+      expect(result1.length).must_equal 4
+      expect(result2.length).must_equal 3
+    end
+    
+    it "raises error if block does not exist" do
+      hotel = Hotel.new 
+      
+      expect{ hotel.check_block_availability(block_id:1) }.must_raise ArgumentError
+    end
+    
+    it "raises error if there are no rooms available" do
+      hotel = Hotel.new 
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", hold_block:2)
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", block_id:1)
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", block_id:1)
+      
+      expect{ hotel.check_block_availability(block_id:1) }.must_raise ArgumentError
+    end
+  end
+end
