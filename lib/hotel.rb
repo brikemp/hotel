@@ -14,17 +14,19 @@ class Hotel
     
   end
   
-  def make_reservation(start_date:, end_date:, hold_block:false, block_id:nil, block_reservation:nil)
-    # need if booking from block
+  def make_reservation(start_date:, end_date:, hold_block:false, block_id:nil)
     if hold_block != false && hold_block.to_s.match(/[1-5]/) == nil # || ( || ) 
-      raise ArgumentError.new("If you want hold a block of rooms, enter the number of rooms to hold.")
-    elsif hold_block == false
+      raise ArgumentError.new("If you want hold a block of rooms, enter the number of rooms (maximum of 5) to hold.")
+    elsif hold_block == false && block_id == nil
       id = @reservations.length + 1
       room = list_available_rooms(start_date, end_date).sample
       reservation = Reservation.new(start_date:start_date, end_date:end_date, room:room, reservation_id:id)
       reservations.push(reservation)
       return reservation
     elsif hold_block.to_s.match(/[1-5]/) != nil
+      if  block_id != nil
+        raise ArgumentError.new("Please make hotel block before booking a room ")
+      end
       reservation_block = {}
       available_count = list_available_rooms(start_date, end_date).length
       if available_count < hold_block
@@ -39,13 +41,20 @@ class Hotel
         reservation_block[reservation] = "Not booked"
       end
       id = @blocks.length + 1
-      block = new.Block(block:reservation_block, block_id:id)
+      block = Block.new(reservations:reservation_block, block_id:id)
+      blocks.push(block)
       return block
-      # elsif block_id != nil
-      #   # resrerve a room for block
+    elsif block_id.to_s.match(/[1-5]/) != nil
+      block = blocks.find{|block| block.block_id == block_id }
+      reservations = block.reservations
+      reservation = reservations.find{|reservation, status| status == "Not booked"}
+      if reservation == nil
+        raise ArgumentError.new("This block has been fully booked")
+      end
+      puts reservation.class# reservation.key = "Booked"
+      reservations[reservation[0]] = "Booked"
     end
   end
-  
   
   def find_reservations_by_date(start_date, end_date)
     if start_date.class == String

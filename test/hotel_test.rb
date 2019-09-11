@@ -21,10 +21,10 @@ describe "Hotel class" do
     end
   end
   
-  describe "Makes reservations correctly and finds appropriate rooms" do
+  describe "Makes solo reservations correctly and finds appropriate rooms" do
     it "removes booked room from eligible room list" do
       hotel = Hotel.new 
-      @reservation = hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:1)
+      @reservation = hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
       room = @reservation.room
       available_rooms = hotel.list_available_rooms("5/05/2019", "5/09/2019")
       
@@ -34,13 +34,13 @@ describe "Hotel class" do
     it "raises argument error when there are no rooms available" do
       hotel = Hotel.new
       expect { 21.times do
-        hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:1)
+        hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
       end }.must_raise ArgumentError
     end
     
     it "instantiates Reservation" do
       hotel = Hotel.new
-      @reservation = hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:1)
+      @reservation = hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
       
       expect(@reservation).must_be_kind_of Reservation
     end
@@ -49,9 +49,9 @@ describe "Hotel class" do
   describe "Find reservation by date" do
     it "lists all reservation for a date range" do
       hotel = Hotel.new 
-      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:1)
-      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:2)
-      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:3)
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
       found_reservations = hotel.find_reservations_by_date("5/05/2019","5/09/2019")
       
       expect(found_reservations.length).must_equal 3
@@ -59,13 +59,41 @@ describe "Hotel class" do
     
     it "does not list reservations outside of date range" do
       hotel = Hotel.new 
-      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:1)
-      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:2)
-      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", reservation_id:3)
-      hotel.make_reservation(start_date:"5/09/2019", end_date:"5/10/2019", reservation_id:4)
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019")
+      hotel.make_reservation(start_date:"5/09/2019", end_date:"5/10/2019")
       found_reservations = hotel.find_reservations_by_date("5/05/2019","5/09/2019")
       
       expect(found_reservations.length).must_equal 3
+    end
+  end
+  
+  describe "Makes block reservations correctly" do
+    it "holds rooms for block" do
+      hotel = Hotel.new 
+      hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", hold_block:3)
+      rooms_available = hotel.list_available_rooms("5/05/2019", "5/09/2019")
+      
+      expect(hotel.blocks[0].reservations.length).must_equal 3
+      expect(hotel.reservations.length).must_equal 3
+      expect(rooms_available.length).must_equal 17
+    end
+    
+    it "raises argument error if block is for more than five rooms" do
+      hotel = Hotel.new
+      expect { hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", hold_block:6) }.must_raise ArgumentError
+    end
+    
+    it "raises argument error if reservation and block are passed in together" do
+      hotel = Hotel.new
+      
+      expect { hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", hold_block:3, block_id:2) }.must_raise ArgumentError
+    end
+    
+    it "removes blocked room for availability once booked" do
+      
+      
     end
   end
 end
