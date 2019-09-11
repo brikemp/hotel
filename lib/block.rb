@@ -6,7 +6,6 @@ class Block
   def initialize(reservations:, block_id:)
     @reservations = reservations
     @block_id = block_id
-    
   end
   
 end

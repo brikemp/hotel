@@ -10,9 +10,6 @@ class Hotel
     @rooms = [*1..20]
   end
   
-  def book_block
-    
-  end
   
   def make_reservation(start_date:, end_date:, hold_block:false, block_id:nil)
     if hold_block != false && hold_block.to_s.match(/[1-5]/) == nil # || ( || ) 
@@ -35,7 +32,7 @@ class Hotel
       hold_block.times do
         id = @reservations.length + 1
         room = list_available_rooms(start_date, end_date).sample
-        reservation = Reservation.new(start_date:start_date, end_date:end_date, room:room, reservation_id:id)
+        reservation = Reservation.new(start_date:start_date, end_date:end_date, room:room, reservation_id:id, block:true)
         reservations.push(reservation)
         reservation_block[reservation] = "Not booked"
       end
@@ -45,6 +42,9 @@ class Hotel
       return block
     elsif block_id.to_s.match(/[1-5]/) != nil
       block = blocks.find{|block| block.block_id == block_id }
+      if block == nil
+        raise ArgumentError.new("This block does not exist yet, please reserve the block first")
+      end
       reservations = block.reservations
       reservation = reservations.find{|reservation, status| status == "Not booked"}
       if reservation == nil

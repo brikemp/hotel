@@ -4,7 +4,9 @@ describe "Reservation class" do
   
   describe "Reservation instantiation" do
     before do
+      @hotel = Hotel.new
       @reservation = Reservation.new(start_date:"5/05/2019", end_date:"5/09/2019", room:5, reservation_id:1)
+      @block = @hotel.make_reservation(start_date:"5/05/2019", end_date:"5/09/2019", hold_block:4)
     end
     
     it "is an instance of Reservation" do
@@ -23,6 +25,10 @@ describe "Reservation class" do
     
     it "calculates reservation cost correctly for non-block booking" do
       expect(@reservation.cost).must_equal 800
+    end
+    
+    it "calculates reservation cost correctly for block booking" do
+      expect(@hotel.reservations[2].cost).must_equal 640
     end
     
   end
